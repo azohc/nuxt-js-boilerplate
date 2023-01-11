@@ -1,5 +1,5 @@
 <template>
-  <h1>counter</h1>
+  <h1 class="text-3xl text-blue-700">counter</h1>
   <h2>
     {{ count }}
   </h2>
@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-const count = ref(0);
+const count = ref(0)
 </script>
