@@ -1,5 +1,12 @@
 <template>
   <div>
+    <Head>
+      <Title>about juan</Title>
+      <Meta
+        name="description"
+        content="some more information about juan"
+      />
+    </Head>
     <h1 class="text-3xl font-bold underline">about</h1>
     <AboutText></AboutText>
     <hr />
