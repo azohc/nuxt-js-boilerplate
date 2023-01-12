@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  margin: 0;
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: all 400ms;

@@ -1,25 +1,16 @@
 <template>
   <div>
     <Head>
-      <Title>about juan</Title>
-      <Meta
-        name="description"
-        content="some more information about juan"
-      />
+      <Title>{{ user }}</Title>
+      <Meta name="description" content="user settings page" />
     </Head>
-    <h1 class="text-3xl font-bold underline">about</h1>
+    <!-- TODO add no robot rule for this page? -->
+    <h1 class="text-3xl font-bold underline">your game history</h1>
+    <!-- TODO add game history not lorem ipsum -->
     <AboutText></AboutText>
-    <hr />
-    <div class="flex justify-center gap-4">
-      <NuxtLink to="/about/me">me</NuxtLink>
-      <NuxtLink to="/about/pet">my pet</NuxtLink>
-    </div>
-    <NuxtPage />
   </div>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "no-footer",
-})
+const user = "todo add user"
 </script>

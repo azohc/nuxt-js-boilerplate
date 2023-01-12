@@ -1,8 +1,12 @@
 <template>
   <nav>
     <NuxtLink to="/">home</NuxtLink>
-    <NuxtLink to="/about">about</NuxtLink>
-    <NuxtLink to="/projects">projects</NuxtLink>
+    <NuxtLink to="/user">login</NuxtLink>
+    <NuxtLink to="/ranking"
+      >ranking
+      <!-- include several sortings on rank to maek it rankings -->
+      <!--s-->
+    </NuxtLink>
   </nav>
 </template>
 
