@@ -11,6 +11,7 @@
 </template>
 
 <script setup>
+const emit = defineEmits(["gameOver"])
 const props = defineProps({
   height: {
     type: Number,
@@ -159,6 +160,10 @@ function onTick() {
   }
   setNextHeadCoordinates()
   const head = snakeState.value.coordinates[0]
+  if (snakeState.value.coordinates.slice(1).includes(head)) {
+    clearInterval(playInterval)
+    emit("gameOver", snakeState.value.coordinates.length)
+  }
   if (head.x === apple.x && head.y === apple.y) {
     apple = getNewAppleCoordinates()
   } else {
@@ -222,7 +227,6 @@ function setNextHeadCoordinates() {
       })
       break
   }
-  console.log("newhead@", snakeState.value.coordinates[0])
 }
 
 function onKeyDown(event) {

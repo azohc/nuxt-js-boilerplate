@@ -9,7 +9,12 @@
     >
       play
     </button>
-    <CanvasGrid v-else :height="height" :width="width" />
+    <CanvasGrid
+      v-else
+      :height="height"
+      :width="width"
+      @game-over="handleGameOver"
+    />
   </div>
 </template>
 
@@ -27,5 +32,10 @@ onMounted(() => {
 
 function startGame() {
   idle.value = false
+}
+
+function handleGameOver(snakeLength) {
+  idle.value = true
+  console.log("game over with snake length = ", snakeLength)
 }
 </script>
