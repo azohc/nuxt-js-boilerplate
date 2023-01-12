@@ -27,7 +27,7 @@ const DIRECTION_LEFT = "LEFT"
 const DIRECTION_RIGHT = "RIGHT"
 const SNAKE_GREEN = "#4F822B"
 const BACKGROUND_GREEN = "#4F822B"
-const TICKRATE = 250
+const TICKRATE = 100
 
 // the below "PIXEL" is NxN actual atomic pixels
 const PIXEL_SIZE = 5
@@ -43,6 +43,7 @@ const spawnPos = {
   x: Math.floor(props.width / PIXEL_SIZE / SQUARE_SIZE),
   y: Math.floor(props.height / PIXEL_SIZE / SQUARE_SIZE),
 }
+
 if (spawnPos.x % 2) {
   spawnPos.x -= 1
 }
@@ -60,6 +61,26 @@ const snakeState = ref({
   direction: DIRECTION_RIGHT,
 })
 
+function getNewAppleCoordinates() {
+  const randomIntBoundedBy = (max) =>
+    Math.floor((Math.random() * max) / PIXEL_SIZE)
+  let x = randomIntBoundedBy(props.width)
+  if (x % 2) x -= 1
+  let y = randomIntBoundedBy(props.height)
+  if (y % 2) y -= 1
+  while (snakeState.value.coordinates.map((c) => c.x).includes(x)) {
+    x = randomIntBoundedBy(props.width)
+    if (x % 2) x -= 1
+  }
+  while (snakeState.value.coordinates.map((c) => c.y).includes(y)) {
+    y = randomIntBoundedBy(props.height)
+    if (y % 2) y -= 1
+  }
+  return { x, y }
+}
+
+let apple = getNewAppleCoordinates()
+
 onMounted(() => {
   context = canvas.value.getContext("2d", {
     alpha: false,
@@ -72,8 +93,6 @@ onMounted(() => {
     drawFirstLine: true,
     color: `${SNAKE_GREEN}88`,
   })
-
-  drawSnake()
 })
 
 function fillBg(color) {
@@ -120,16 +139,6 @@ function drawSquare(x, y, color) {
   drawPixel(x + 1, y + 1, color)
 }
 
-function drawSnake() {
-  const { coordinates } = snakeState.value
-  const head = coordinates[0]
-
-  drawSquare(head.x, head.y)
-  coordinates
-    .slice(1)
-    .forEach((coord) => drawSquare(coord.x, coord.y))
-}
-
 function onTick() {
   // consume whatever the latest keydown is
   if (latestKeydown.value) {
@@ -149,11 +158,26 @@ function onTick() {
     latestKeydown.value = null
   }
   setNextHeadCoordinates()
-  // // POP TAIL // TODO UNLESS ATE APPLE ON THIS TICK
-  const tail = snakeState.value.coordinates.pop()
+  const head = snakeState.value.coordinates[0]
+  if (head.x === apple.x && head.y === apple.y) {
+    apple = getNewAppleCoordinates()
+  } else {
+    snakeState.value.coordinates.pop()
+  }
   // TODO avoid reset, just use popped tail to paint as bggreen
   reset()
   drawSnake()
+  drawSquare(apple.x, apple.y, "red")
+}
+
+function drawSnake() {
+  const { coordinates } = snakeState.value
+  const head = coordinates[0]
+
+  drawSquare(head.x, head.y)
+  coordinates
+    .slice(1)
+    .forEach((coord) => drawSquare(coord.x, coord.y))
 }
 
 function setNextHeadCoordinates() {
@@ -165,14 +189,15 @@ function setNextHeadCoordinates() {
         y:
           currentHead.y > 0
             ? currentHead.y - SQUARE_SIZE
-            : props.height / PIXEL_SIZE - SQUARE_SIZE,
+            : Math.floor(props.height / PIXEL_SIZE) - SQUARE_SIZE,
       })
       break
     case DIRECTION_DOWN:
       snakeState.value.coordinates.unshift({
         x: currentHead.x,
         y:
-          currentHead.y + SQUARE_SIZE < props.height / PIXEL_SIZE
+          currentHead.y + SQUARE_SIZE <
+          Math.floor(props.height / PIXEL_SIZE)
             ? currentHead.y + SQUARE_SIZE
             : 0,
       })
@@ -182,20 +207,22 @@ function setNextHeadCoordinates() {
         x:
           currentHead.x > 0
             ? currentHead.x - SQUARE_SIZE
-            : props.width / PIXEL_SIZE - SQUARE_SIZE,
+            : Math.floor(props.width / PIXEL_SIZE) - SQUARE_SIZE,
         y: currentHead.y,
       })
       break
     case DIRECTION_RIGHT:
       snakeState.value.coordinates.unshift({
         x:
-          currentHead.x + SQUARE_SIZE < props.width / PIXEL_SIZE
+          currentHead.x + SQUARE_SIZE <
+          Math.floor(props.width / PIXEL_SIZE)
             ? currentHead.x + SQUARE_SIZE
             : 0,
         y: currentHead.y,
       })
       break
   }
+  console.log("newhead@", snakeState.value.coordinates[0])
 }
 
 function onKeyDown(event) {

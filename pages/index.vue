@@ -19,7 +19,10 @@ let width, height
 
 onMounted(() => {
   width = document.documentElement.clientWidth
+  while (Math.floor(width / 5) % 2) width -= 1
   height = document.documentElement.clientHeight
+  while (Math.floor(height / 5) % 2) height -= 1
+  console.log(`${width}x${height}`)
 })
 
 function startGame() {
