@@ -1,10 +1,8 @@
 <template>
   <canvas
     ref="canvas"
-    class="h-screen w-screen"
     @keydown="onKeyDown"
-    autofocus
-    tabindex="0"
+    tabindex="1"
     :height="props.height"
     :width="props.width"
   ></canvas>
@@ -26,8 +24,8 @@ const DIRECTION_UP = "UP"
 const DIRECTION_DOWN = "DOWN"
 const DIRECTION_LEFT = "LEFT"
 const DIRECTION_RIGHT = "RIGHT"
-const SNAKE_GREEN = "#4F822B"
-const BACKGROUND_GREEN = "#4F822B"
+const SNAKE_GREEN = "#14532D"
+const BACKGROUND_GREEN = "#16A349"
 const TICKRATE = 100
 
 // the below "PIXEL" is NxN actual atomic pixels
@@ -36,8 +34,8 @@ const PIXEL_SIZE = 5
 // the below "SQUARE" is MxM of the above PIXELs
 const SQUARE_SIZE = 2
 
-const latestKeydown = ref(null)
-const canvas = ref(null)
+const latestKeydown = ref()
+const canvas = ref()
 let context, playInterval
 
 const spawnPos = {
@@ -89,38 +87,12 @@ onMounted(() => {
   fillBg(BACKGROUND_GREEN)
 
   playInterval = setInterval(onTick, TICKRATE)
-
-  drawGrid({
-    drawFirstLine: true,
-    color: `${SNAKE_GREEN}88`,
-  })
+  canvas.value.focus()
 })
 
 function fillBg(color) {
   context.fillStyle = color
   context.fillRect(0, 0, props.width, props.height)
-}
-
-function drawGrid(options) {
-  const { color, drawFirstLine } = options
-  for (
-    let x = drawFirstLine ? 0 : 1;
-    x <= props.width;
-    x += PIXEL_SIZE
-  ) {
-    context.moveTo(x, 0)
-    context.lineTo(x, props.height)
-  }
-  for (
-    let x = drawFirstLine ? 0 : 1;
-    x <= props.height;
-    x += PIXEL_SIZE
-  ) {
-    context.moveTo(0, x)
-    context.lineTo(props.width, x)
-  }
-  context.strokeStyle = color
-  context.stroke()
 }
 
 function drawPixel(x, y, color) {
@@ -134,10 +106,10 @@ function drawPixel(x, y, color) {
 }
 
 function drawSquare(x, y, color) {
-  drawPixel(x, y, color)
-  drawPixel(x, y + 1, color)
-  drawPixel(x + 1, y, color)
-  drawPixel(x + 1, y + 1, color)
+  drawPixel(x, y, color || SNAKE_GREEN)
+  drawPixel(x, y + 1, color || SNAKE_GREEN)
+  drawPixel(x + 1, y, color || SNAKE_GREEN)
+  drawPixel(x + 1, y + 1, color || SNAKE_GREEN)
 }
 
 function onTick() {
@@ -160,9 +132,12 @@ function onTick() {
   }
   setNextHeadCoordinates()
   const head = snakeState.value.coordinates[0]
-  if (snakeState.value.coordinates.slice(1).includes(head)) {
-    clearInterval(playInterval)
-    emit("gameOver", snakeState.value.coordinates.length)
+  if (
+    snakeState.value.coordinates
+      .slice(1)
+      .some((c) => c.x === head.x && c.y === head.y)
+  ) {
+    endGame()
   }
   if (head.x === apple.x && head.y === apple.y) {
     apple = getNewAppleCoordinates()
@@ -233,6 +208,11 @@ function onKeyDown(event) {
   if (event.code === "Space") {
     togglepause()
     return
+  } else if (event.code === "Tab") {
+    event.preventDefault()
+    return
+  } else if (event.code === "Escape") {
+    endGame()
   }
   const DIRECTION_KEYCODES = [
     "ArrowUp",
@@ -266,9 +246,14 @@ function onKeyDown(event) {
   }
 }
 
+function endGame() {
+  clearInterval(playInterval)
+  emit("gameOver", snakeState.value.coordinates.length)
+}
+
 const reset = () => {
   context.clearRect(0, 0, props.width, props.height)
-  fillBg(SNAKE_GREEN)
+  fillBg(BACKGROUND_GREEN)
 }
 
 const togglepause = () => {
