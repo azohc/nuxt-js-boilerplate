@@ -28,5 +28,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/": { ssr: false },
+    "/user": { ssr: false },
   },
 })

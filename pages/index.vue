@@ -2,16 +2,12 @@
   <div
     ref="container"
     tabindex="2"
-    class="bg-green-600 h-screen w-screen flex flex-col justify-center items-center"
+    class="h-screen w-screen flex flex-col justify-center items-center"
     @keyup="onKeyUp"
   >
-    <button
-      v-if="state === 'idle'"
-      @click="startGame"
-      class="bg-green-900 p-6 rounded-sm text-violet-100 text-3xl"
-    >
+    <CardButton v-if="state === 'idle'" :click-callback="startGame">
       play
-    </button>
+    </CardButton>
     <CanvasGrid
       v-else-if="state === 'playing'"
       :height="height"
@@ -20,18 +16,19 @@
     />
     <div
       v-else-if="state === 'dead'"
-      class="bg-green-900 p-6 rounded-sm text-violet-100 text-center"
+      class="p-6 text-center flex flex-col items-center gap-3"
     >
-      <h2 class="text-3xl">game over</h2>
+      <h2 class="text-5xl">game over</h2>
       <p>you ate {{ lastGameScore }} apples</p>
-      <button
-        @click="startGame"
-        class="bg-green-900 p-6 rounded-sm text-violet-100 text-3xl"
-      >
+
+      <CardButton :click-callback="startGame">
         play again
-      </button>
+      </CardButton>
+
+      <CardButton secondary :click-callback="navigateToRankings">
+        <NuxtLink to="/ranking">ranking</NuxtLink>
+      </CardButton>
     </div>
-    <!-- TODO HIGHSCROE PREVIEW/LINK TO RANKINGS -->
   </div>
 </template>
 
@@ -45,6 +42,12 @@ const lastGameScore = computed<number>(
 const container = ref()
 let width: number, height: number
 let coolingDown = true
+
+function navigateToRankings() {
+  return navigateTo({
+    path: "/ranking",
+  })
+}
 
 onMounted(() => {
   width = document.documentElement.clientWidth
