@@ -172,16 +172,22 @@ function drawSnake() {
     .forEach((coord) => drawSquare(coord.x, coord.y))
 }
 
+// TODO TEST THIS FUNC
 function setNextHeadCoordinates() {
   const currentHead = snakeState.value.coordinates[0]
+  let nextHeadPixel
   switch (snakeState.value.direction) {
     case DIRECTION_UP:
+      nextHeadPixel =
+        Math.floor(props.height / PIXEL_SIZE) - SQUARE_SIZE
       snakeState.value.coordinates.unshift({
         x: currentHead.x,
         y:
           currentHead.y > 0
             ? currentHead.y - SQUARE_SIZE
-            : Math.floor(props.height / PIXEL_SIZE) - SQUARE_SIZE,
+            : nextHeadPixel % 2
+            ? --nextHeadPixel
+            : nextHeadPixel,
       })
       break
     case DIRECTION_DOWN:
@@ -195,11 +201,15 @@ function setNextHeadCoordinates() {
       })
       break
     case DIRECTION_LEFT:
+      nextHeadPixel =
+        Math.floor(props.width / PIXEL_SIZE) - SQUARE_SIZE
       snakeState.value.coordinates.unshift({
         x:
           currentHead.x > 0
             ? currentHead.x - SQUARE_SIZE
-            : Math.floor(props.width / PIXEL_SIZE) - SQUARE_SIZE,
+            : nextHeadPixel % 2
+            ? --nextHeadPixel
+            : nextHeadPixel,
         y: currentHead.y,
       })
       break

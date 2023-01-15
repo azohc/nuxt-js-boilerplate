@@ -1,1 +1,4 @@
-{"juan":{"duration":150107,"snakeLength":18},"god":{"snakeLength":1,"duration":39320}}
+{
+  "juan": { "duration": 144386, "snakeLength": 37 },
+  "god": { "snakeLength": 11, "duration": 1 }
+}
