@@ -1,4 +1,4 @@
 {
-  "pedro": 12,
-  "juan": 11
+  "god": { "snakeLength": 1, "duration": 39320 },
+  "juan": { "duration": 59510, "snakeLength": 0 }
 }

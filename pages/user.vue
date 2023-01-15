@@ -1,5 +1,4 @@
 <template>
-  <!-- // TODO refactoro ut this centered flex col cc -->
   <div
     class="text-xl h-screen flex flex-col justify-center items-center"
   >
@@ -48,7 +47,6 @@ const alias = ref("")
 const user = ref(localStorage.getItem("USER_ALIAS"))
 const registered = ref(!!user.value)
 function submitAlias() {
-  console.log("alias", alias.value)
   user.value = alias.value
   localStorage.setItem("USER_ALIAS", user.value)
 }

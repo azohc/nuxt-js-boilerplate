@@ -5,10 +5,14 @@
     class="h-screen w-screen flex flex-col justify-center items-center"
     @keyup="onKeyUp"
   >
-    <CardButton v-if="state === 'idle'" :click-callback="startGame">
-      play
-    </CardButton>
-    <CanvasGrid
+    <div
+      class="flex flex-col gap-4 items-center"
+      v-if="state === 'idle'"
+    >
+      <h1 class="text-8xl">snake</h1>
+      <CardButton :click-callback="startGame"> play </CardButton>
+    </div>
+    <SnakeCanvas
       v-else-if="state === 'playing'"
       :height="height"
       :width="width"
@@ -43,6 +47,11 @@ const container = ref()
 let width: number, height: number
 let coolingDown = true
 
+function navigateToUser() {
+  return navigateTo({
+    path: "/user",
+  })
+}
 function navigateToRankings() {
   return navigateTo({
     path: "/ranking",
@@ -56,6 +65,10 @@ onMounted(() => {
   while (height % 5) height -= 1
   container.value.focus()
 })
+
+function getAlias(): string | null {
+  return localStorage.getItem("USER_ALIAS")
+}
 
 function onKeyUp(event: KeyboardEvent) {
   if (coolingDown) return
@@ -84,17 +97,35 @@ function startGame() {
   state.value = "playing"
 }
 
-function setTimeoutGameOverOrWelcome() {
+function startPlayCooldown() {
   coolingDown = true
   setTimeout(() => (coolingDown = false), 1100)
 }
 
-function handleGameOver(snakeLength: number) {
+async function handleGameOver({
+  snakeLength,
+  duration,
+}: {
+  snakeLength: number
+  duration: Date
+}) {
   state.value = "dead"
   lastSnakeLength.value = snakeLength
   // store in ranking if above 11 apples TODO
   container.value.focus()
-  setTimeoutGameOverOrWelcome()
+  startPlayCooldown()
+  const alias = getAlias()
+  if (alias) {
+    await useFetch("/api/saveGame", {
+      lazy: true,
+      method: "post",
+      body: {
+        alias,
+        duration,
+        snakeLength,
+      },
+    })
+  }
 }
-setTimeoutGameOverOrWelcome()
+startPlayCooldown()
 </script>

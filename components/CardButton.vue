@@ -8,6 +8,8 @@
 </template>
 
 <script setup lang="ts">
+import { NavigationFailure } from "vue-router"
+
 const props = defineProps<{
   secondary?: boolean
   clickCallback: (payload?: MouseEvent) => void

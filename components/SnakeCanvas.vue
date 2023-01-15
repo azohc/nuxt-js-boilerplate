@@ -79,6 +79,7 @@ function getNewAppleCoordinates() {
 }
 
 let apple = getNewAppleCoordinates()
+let timeGameStarted
 
 onMounted(() => {
   context = canvas.value.getContext("2d", {
@@ -88,6 +89,7 @@ onMounted(() => {
 
   playInterval = setInterval(onTick, TICKRATE)
   canvas.value.focus()
+  timeGameStarted = new Date()
 })
 
 function fillBg(color) {
@@ -205,6 +207,8 @@ function setNextHeadCoordinates() {
 }
 
 function onKeyDown(event) {
+  // TODO implement keyDown BUFFER and consume+reset on tick
+  // use the 1st keypress only
   if (event.code === "Space") {
     togglepause()
     return
@@ -246,9 +250,12 @@ function onKeyDown(event) {
   }
 }
 
-function endGame() {
+async function endGame() {
   clearInterval(playInterval)
-  emit("gameOver", snakeState.value.coordinates.length)
+  emit("gameOver", {
+    snakeLength: snakeState.value.coordinates.length,
+    duration: new Date() - timeGameStarted,
+  })
 }
 
 const reset = () => {
