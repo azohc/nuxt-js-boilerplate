@@ -9,6 +9,13 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ["SummerPixel"],
+      serif: ["SummerPixel"],
+      mono: ["SummerPixel"],
+      display: ["SummerPixel"],
+      body: ["SummerPixel"],
+    },
   },
   plugins: [],
 }

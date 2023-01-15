@@ -40,7 +40,7 @@ function setRankingTableData() {
       (alias) => [
         alias,
         ranking.value[alias].snakeLength,
-        Math.floor(ranking.value[alias].duration / 1000) + "s",
+        Math.floor(ranking.value[alias].duration / 1000) + " s",
       ]
     )
   }

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "SummerPixel";
+  font-weight: 400;
+  src: url("../fonts/SummerPixelWide22Regular-4BoW4.woff")
+    format("woff");
+}
+
 body {
   margin: 0;
 }
