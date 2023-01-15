@@ -26,7 +26,7 @@ const DIRECTION_LEFT = "LEFT"
 const DIRECTION_RIGHT = "RIGHT"
 const SNAKE_GREEN = "#14532D"
 const BACKGROUND_GREEN = "#16A349"
-const TICKRATE = 100
+let TICKRATE = 100
 
 // the below "PIXEL" is NxN actual atomic pixels
 const PIXEL_SIZE = 5
@@ -227,7 +227,17 @@ function onKeyDown(event) {
     return
   } else if (event.code === "Escape") {
     endGame()
+  } else if (["KeyF", "KeyG"].includes(event.code)) {
+    TICKRATE = TICKRATE + (event.code === "KeyG" ? 11 : -11)
+    const reSetInterval = () => {
+      if (playInterval !== null) {
+        playInterval = clearInterval(playInterval)
+      }
+      playInterval = setInterval(onTick, TICKRATE)
+    }
+    reSetInterval()
   }
+
   const DIRECTION_KEYCODES = [
     "ArrowUp",
     "ArrowDown",

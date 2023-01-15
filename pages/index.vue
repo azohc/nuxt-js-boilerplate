@@ -86,7 +86,11 @@ function onKeyUp(event: KeyboardEvent) {
     "KeyH",
     "KeyL",
   ]
-  if (DIRECTION_KEYCODES.concat("Space").includes(event.code)) {
+  if (
+    DIRECTION_KEYCODES.concat("Space", "KeyF", "KeyG").includes(
+      event.code
+    )
+  ) {
     startGame()
   } else if (event.code === "Esc") {
     state.value = "idle"
