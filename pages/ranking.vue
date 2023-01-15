@@ -28,12 +28,21 @@
 definePageMeta({
   middleware: "auth",
 })
-const { data: ranking } = await useFetch("/api/ranking")
-const rankingMatrix = Object.keys(ranking.value).map((alias) => [
-  alias,
-  ranking.value[alias].snakeLength,
-  Math.floor(ranking.value[alias].duration / 1000) + "s",
-])
 const rankingTableHead = ["alias", "length", "time"]
-const rankingTableData = ref(rankingMatrix)
+const rankingTableData = ref()
+const { data: ranking, pending } = await useFetch("/api/ranking")
+watch(ranking, setRankingTableData)
+setRankingTableData()
+
+function setRankingTableData() {
+  if (!pending.value && ranking) {
+    rankingTableData.value = Object.keys(ranking.value).map(
+      (alias) => [
+        alias,
+        ranking.value[alias].snakeLength,
+        Math.floor(ranking.value[alias].duration / 1000) + "s",
+      ]
+    )
+  }
+}
 </script>
