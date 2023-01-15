@@ -122,7 +122,7 @@ async function handleGameOver({
       body: {
         alias,
         duration,
-        snakeLength,
+        snakeLength: lastGameScore,
       },
     })
   }

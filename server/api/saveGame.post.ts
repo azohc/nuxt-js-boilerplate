@@ -4,16 +4,16 @@ export default defineEventHandler(async (event) => {
   const ranking = await $fetch("/api/ranking")
   if (ranking[alias] && snakeLength > ranking[alias].snakeLength) {
     ranking[alias] = { duration, snakeLength }
-    let newRanking = [...Object.entries(ranking)].sort(
-      (a: any, b: any) => {
-        const bl = b[1].snakeLength,
-          al = a[1].snakeLength
-        if (bl === al) {
-          return a[1].duration - b[1].duration
+    let newRanking = Object.fromEntries(
+      [...Object.entries(ranking)].sort((a: any, b: any) => {
+        const gameA = a[1],
+          gameB = b[1]
+        if (gameB.snakeLength === gameA.snakeLength) {
+          return gameA.duration - gameB.duration
         } else {
-          return bl - al
+          return gameB.snakeLength - gameA.snakeLength
         }
-      }
+      })
     )
 
     $fetch("/api/ranking", {

@@ -4,9 +4,9 @@
   >
     <div
       v-if="registered"
-      class="flex flex-col justify-center items-center text-center"
+      class="flex flex-col justify-center items-center text-center gap-4"
     >
-      <h1 class="text-3xl">welcome back, {{ user }}</h1>
+      <h1 class="text-5xl">welcome back, {{ userCookie }}</h1>
       <!-- <p>TODO show stats about your best match</p>
       <p>TODO show stats about your total play time</p>
       <p>TODO show graph with scores from last 7 days</p>
@@ -14,7 +14,7 @@
       <p>
         TODO show less ideas, or at least the ones that make sense
       </p> -->
-      <CardButton :click-callback="navigateTo('/')"
+      <CardButton secondary :click-callback="() => navigateTo('/')"
         >back to playing snake</CardButton
       >
     </div>
@@ -27,7 +27,7 @@
           class="w-44 p-1 bg-purple-100"
           maxlength="11"
           @keyup="onKeyUp"
-          v-model="alias"
+          v-model="aliasInput"
           placeholder="maxlength11"
         />
       </div>
@@ -42,13 +42,15 @@
 </template>
 
 <script setup>
-const alias = ref("")
+const aliasInput = ref("")
 // TODO get scores, match history or whatever that's associated to user to add some clutter on screen
-const user = ref(localStorage.getItem("USER_ALIAS"))
-const registered = ref(!!user.value)
+const userCookie = useCookie("userAlias", {
+  expires: new Date("12/12/2023"),
+})
+const registered = ref(!!userCookie.value)
 function submitAlias() {
-  user.value = alias.value
-  localStorage.setItem("USER_ALIAS", user.value)
+  userCookie.value = aliasInput.value
+  registered.value = !!userCookie.value
 }
 function onKeyUp(event) {
   if (event.code === "Enter") {

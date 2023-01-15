@@ -8,14 +8,14 @@
               <tr>
                 <th
                   scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                  class="text-sm font-medium text-green-900 px-6 py-4 text-left"
                 >
                   #
                 </th>
                 <th
                   v-for="column in props.head"
                   scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                  class="text-sm font-medium text-green-900 px-6 py-4 text-left"
                 >
                   {{ column }}
                 </th>
@@ -27,13 +27,13 @@
                 class="bg-green-600 transition duration-300 ease-in-out hover:bg-green-500"
               >
                 <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700"
+                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-800"
                 >
                   {{ index + 1 }}
                 </td>
                 <td
                   v-for="cell in row"
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-900"
                 >
                   {{ cell }}
                 </td>

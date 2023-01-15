@@ -38,24 +38,30 @@ const latestKeydown = ref()
 const canvas = ref()
 let context, playInterval
 
-const spawnPos = {
+const centerCoordinates = {
   x: Math.floor(props.width / PIXEL_SIZE / SQUARE_SIZE),
   y: Math.floor(props.height / PIXEL_SIZE / SQUARE_SIZE),
 }
 
-if (spawnPos.x % 2) {
-  spawnPos.x -= 1
+if (centerCoordinates.x % 2) {
+  centerCoordinates.x -= 1
 }
-if (spawnPos.y % 2) {
-  spawnPos.y -= 1
+if (centerCoordinates.y % 2) {
+  centerCoordinates.y -= 1
 }
 
 const snakeState = ref({
   coordinates: [
-    spawnPos,
-    { ...spawnPos, x: spawnPos.x - SQUARE_SIZE },
-    { ...spawnPos, x: spawnPos.x - 2 * SQUARE_SIZE },
-    { ...spawnPos, x: spawnPos.x - 3 * SQUARE_SIZE },
+    centerCoordinates,
+    { ...centerCoordinates, x: centerCoordinates.x - SQUARE_SIZE },
+    {
+      ...centerCoordinates,
+      x: centerCoordinates.x - 2 * SQUARE_SIZE,
+    },
+    {
+      ...centerCoordinates,
+      x: centerCoordinates.x - 3 * SQUARE_SIZE,
+    },
   ],
   direction: DIRECTION_RIGHT,
 })
@@ -148,6 +154,10 @@ function onTick() {
   }
   // TODO avoid reset, just use popped tail to paint as bggreen
   reset()
+  if (ticksTilPlayFades) {
+    ticksTilPlayFades--
+    drawPlayFade()
+  }
   drawSnake()
   drawSquare(apple.x, apple.y, "red")
 }
@@ -263,12 +273,49 @@ const reset = () => {
   fillBg(BACKGROUND_GREEN)
 }
 
+function drawPause() {
+  const pauseHeight = 10
+  const pauseWidth = 6
+  const { x, y } = {
+    x: centerCoordinates.x - pauseWidth / 2,
+    y: centerCoordinates.y - pauseHeight / 2,
+  }
+  const drawBlackPx = (x, y) => drawPixel(x, y, "black")
+  for (let i = 0; i < pauseHeight; i++) {
+    drawBlackPx(x, y + i)
+    drawBlackPx(x + 1, y + i)
+  }
+  for (let i = 0; i < pauseHeight; i++) {
+    drawBlackPx(x + pauseWidth, y + i)
+    drawBlackPx(x + pauseWidth + 1, y + i)
+  }
+}
+
+let ticksTilPlayFades = 0
+function drawPlayFade() {
+  const playHeight = 10
+  const playWidth = 6
+  const fadingFill = `#000000${ticksTilPlayFades * 10}`
+  const { x, y } = {
+    x: centerCoordinates.x - playWidth / 2,
+    y: centerCoordinates.y - playHeight / 2,
+  }
+  const drawBlackPx = (x, y) => drawPixel(x, y, fadingFill)
+  for (let i = 0; i < playHeight; i++) {
+    drawBlackPx(x, y + i)
+    drawBlackPx(x + 1, y + i)
+  }
+  drawSquare(x + 2, y + 2, fadingFill)
+  drawSquare(x + 4, y + 4, fadingFill)
+  drawSquare(x + 2, y + 6, fadingFill)
+}
 const togglepause = () => {
   if (playInterval == null) {
     playInterval = setInterval(onTick, TICKRATE)
-    // TODO add indicator of paused state
+    ticksTilPlayFades = 8
   } else {
     playInterval = clearInterval(playInterval)
+    drawPause()
   }
 }
 </script>

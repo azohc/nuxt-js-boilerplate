@@ -1,5 +1,7 @@
 <template>
-  <div class="h-screen flex flex-col justify-center items-center">
+  <div
+    class="h-screen flex flex-col justify-center items-center gap-5"
+  >
     <Head>
       <Title>leaderboards</Title>
       <Meta
@@ -7,7 +9,7 @@
         content="the highest rated and most outstanding players of snake"
       />
     </Head>
-    <h1 class="text-3xl font-bold">global ranking</h1>
+    <h1 class="text-5xl font-bold">global ranking</h1>
     <div class="flex justify-center gap-4">
       <TailwindTable
         v-if="rankingTableData"
@@ -16,20 +18,17 @@
       ></TailwindTable>
       <h1 v-else>loading rankings...</h1>
     </div>
-    <NuxtPage />
+    <CardButton secondary :click-callback="() => navigateTo('/')">
+      <NuxtLink to="/">play again</NuxtLink>
+    </CardButton>
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  middleware: "ranking",
+  middleware: "auth",
 })
-const {
-  data: ranking,
-  pending,
-  error,
-  refresh,
-} = await useFetch("/api/ranking")
+const { data: ranking } = await useFetch("/api/ranking")
 const rankingMatrix = Object.keys(ranking.value).map((alias) => [
   alias,
   ranking.value[alias].snakeLength,
