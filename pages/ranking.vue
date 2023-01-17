@@ -26,7 +26,14 @@
 
 <script setup>
 definePageMeta({
-  middleware: "auth",
+  middleware: [
+    function (to, from) {
+      const authStore = useAuthStore()
+      if (!authStore.isAuthenticated) {
+        return navigateTo("/user")
+      }
+    },
+  ],
 })
 const rankingTableHead = ["alias", "length", "time"]
 const rankingTableData = ref()

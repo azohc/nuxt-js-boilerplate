@@ -1,0 +1,7 @@
+add help dialog maybe on ? keyCode
+
+hide cursor over canvas
+
+factor in screen resolution to score maybe as an alternative ranking
+
+useInfiniteScroll for leaderboards

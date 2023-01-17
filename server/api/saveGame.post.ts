@@ -1,4 +1,3 @@
-import * as fs from "fs"
 export default defineEventHandler(async (event) => {
   const { alias, duration, snakeLength } = await readBody(event)
   const ranking = await $fetch("/api/ranking")
@@ -16,7 +15,9 @@ export default defineEventHandler(async (event) => {
       })
     )
 
-    $fetch("/api/ranking", {
+    console.log("savegamepost::: posting newranking;", newRanking)
+
+    return $fetch("/api/ranking", {
       method: "post",
       body: {
         newRanking,

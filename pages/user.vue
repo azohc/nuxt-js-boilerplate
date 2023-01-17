@@ -3,10 +3,10 @@
     class="text-xl h-screen flex flex-col justify-center items-center"
   >
     <div
-      v-if="registered"
+      v-if="authStore.isAuthenticated"
       class="flex flex-col justify-center items-center text-center gap-4"
     >
-      <h1 class="text-5xl">welcome back, {{ userCookie }}</h1>
+      <h1 class="text-5xl">welcome back, {{ authStore.alias }}</h1>
       <!-- <p>TODO show stats about your best match</p>
       <p>TODO show stats about your total play time</p>
       <p>TODO show graph with scores from last 7 days</p>
@@ -17,20 +17,21 @@
       <CardButton secondary :click-callback="() => navigateTo('/')"
         >back to playing snake</CardButton
       >
+      <CardButton secondary :click-callback="handleLogoutClick"
+        >log out</CardButton
+      >
     </div>
     <div v-else class="flex flex-col justify-center items-center">
-      <div>
-        <label class="px-2" for="user-alias">
-          enter an alias to compete in the global ranking
-        </label>
-        <input
-          class="w-44 p-1 bg-purple-100"
-          maxlength="11"
-          @keyup="onKeyUp"
-          v-model="aliasInput"
-          placeholder="maxlength11"
-        />
-      </div>
+      <label class="px-2" for="user-alias">
+        enter an alias to compete in the global ranking
+      </label>
+      <input
+        class="w-44 p-1 bg-purple-100"
+        maxlength="11"
+        @keyup="onKeyUp"
+        v-model="aliasInput"
+        placeholder="maxlength11"
+      />
       <button
         class="py-3 m-2 rounded bg-green-700 text-purple-200 px-5"
         @click="submitAlias"
@@ -44,18 +45,16 @@
 <script setup>
 const aliasInput = ref("")
 // TODO get scores, match history or whatever that's associated to user to add some clutter on screen
-const userCookie = useCookie("userAlias", {
-  expires: new Date("12/12/2023"),
-})
-const registered = ref(!!userCookie.value)
+const authStore = useAuthStore()
 function submitAlias() {
-  userCookie.value = aliasInput.value
-  registered.value = !!userCookie.value
+  authStore.login(aliasInput.value)
 }
 function onKeyUp(event) {
   if (event.code === "Enter") {
     submitAlias()
-    registered = true
   }
+}
+function handleLogoutClick() {
+  authStore.logout()
 }
 </script>

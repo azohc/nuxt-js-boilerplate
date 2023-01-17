@@ -30,4 +30,15 @@ export default defineNuxtConfig({
     "/": { ssr: false },
     "/user": { ssr: false },
   },
+  modules: [
+    [
+      "@pinia/nuxt",
+      {
+        autoImports: ["defineStore", "acceptHMRUpdate"],
+      },
+    ],
+  ],
+  imports: {
+    dirs: ["stores"],
+  },
 })

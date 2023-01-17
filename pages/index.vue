@@ -11,6 +11,15 @@
     >
       <h1 class="text-8xl">snake</h1>
       <CardButton :click-callback="startGame"> play </CardButton>
+      <CardButton
+        v-if="authStore.isAuthenticated"
+        :click-callback="navigateToUser"
+        secondary
+        >{{ authStore.alias }}</CardButton
+      >
+      <CardButton v-else :click-callback="navigateToUser" secondary
+        >set alias</CardButton
+      >
     </div>
     <SnakeCanvas
       v-else-if="state === 'playing'"
@@ -37,8 +46,9 @@
 </template>
 
 <script setup lang="ts">
-type State = "idle" | "playing" | "dead"
-const state = ref<State>("idle")
+const authStore = useAuthStore()
+type GameState = "idle" | "playing" | "dead"
+const state = ref<GameState>("idle")
 const lastSnakeLength = ref()
 const lastGameScore = computed<number>(
   () => lastSnakeLength.value - 4
@@ -65,10 +75,6 @@ onMounted(() => {
   while (height % 5) height -= 1
   container.value.focus()
 })
-
-function getAlias(): string | null {
-  return localStorage.getItem("USER_ALIAS")
-}
 
 function onKeyUp(event: KeyboardEvent) {
   if (coolingDown) return
@@ -118,17 +124,26 @@ async function handleGameOver({
   // store in ranking if above 11 apples TODO
   container.value.focus()
   startPlayCooldown()
-  const alias = getAlias()
-  if (alias) {
-    await useFetch("/api/saveGame", {
-      lazy: true,
-      method: "post",
+  const alias = authStore.alias
+  if (alias && lastGameScore.value) {
+    console.log("sending post to saveame from index")
+
+    await $fetch("/api/savegame", {
+      method: "POST",
       body: {
         alias,
         duration,
-        snakeLength: lastGameScore,
+        snakeLength: lastGameScore.value,
       },
     })
+    // await useFetch("/api/savegame", {
+    //   method: "post",
+    //   body: {
+    //     alias,
+    //     duration,
+    //     snakeLength: lastGameScore,
+    //   },
+    // })
   }
 }
 startPlayCooldown()
