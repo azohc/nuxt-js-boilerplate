@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-screen flex flex-col justify-center items-center gap-5"
+    class="h-screen flex flex-col justify-center items-center gap-8"
   >
     <Head>
       <Title>leaderboards</Title>

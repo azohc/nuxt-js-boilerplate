@@ -18,7 +18,7 @@
       >log out</CardButton
     >
   </div>
-  <div v-else class="flex flex-col justify-center items-center">
+  <div v-else class="flex flex-col justify-center items-center gap-4">
     <label class="px-2" for="user-alias">
       enter an alias to compete in the global ranking
     </label>

@@ -5,6 +5,7 @@
     class="h-screen w-screen flex flex-col justify-center items-center"
     @keyup="onKeyUp"
   >
+    <Head> <Title> snake </Title> </Head>
     <div
       class="flex flex-col gap-4 items-center"
       v-if="state === 'idle'"
@@ -126,24 +127,17 @@ async function handleGameOver({
   startPlayCooldown()
   const alias = authStore.alias
   if (alias && lastGameScore.value) {
-    console.log("sending post to saveame from index")
+    const body = {
+      alias,
+      duration,
+      snakeLength: lastGameScore.value,
+    }
+    console.log("sending post to saveame from index", body)
 
     await $fetch("/api/savegame", {
       method: "POST",
-      body: {
-        alias,
-        duration,
-        snakeLength: lastGameScore.value,
-      },
+      body,
     })
-    // await useFetch("/api/savegame", {
-    //   method: "post",
-    //   body: {
-    //     alias,
-    //     duration,
-    //     snakeLength: lastGameScore,
-    //   },
-    // })
   }
 }
 startPlayCooldown()
