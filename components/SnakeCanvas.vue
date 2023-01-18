@@ -1,5 +1,6 @@
 <template>
   <canvas
+    class="cursor-none"
     ref="canvas"
     @keydown="onKeyDown"
     tabindex="1"
@@ -26,7 +27,7 @@ const DIRECTION_LEFT = "LEFT"
 const DIRECTION_RIGHT = "RIGHT"
 const SNAKE_GREEN = "#14532D"
 const BACKGROUND_GREEN = "#16A349"
-let TICKRATE = 100
+let TICKRATE = 60
 
 // the below "PIXEL" is NxN actual atomic pixels
 const PIXEL_SIZE = 5
@@ -238,7 +239,9 @@ function onKeyDown(event) {
   } else if (event.code === "Escape") {
     endGame()
   } else if (["KeyF", "KeyG"].includes(event.code)) {
-    TICKRATE = TICKRATE + (event.code === "KeyG" ? 11 : -11)
+    if (TICKRATE >= 30) {
+      TICKRATE = TICKRATE + (event.code === "KeyG" ? 15 : -15)
+    }
     const reSetInterval = () => {
       if (playInterval !== null) {
         playInterval = clearInterval(playInterval)

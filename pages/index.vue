@@ -127,16 +127,13 @@ async function handleGameOver({
   startPlayCooldown()
   const alias = authStore.alias
   if (alias && lastGameScore.value) {
-    const body = {
-      alias,
-      duration,
-      snakeLength: lastGameScore.value,
-    }
-    console.log("sending post to saveame from index", body)
-
-    await $fetch("/api/savegame", {
-      method: "POST",
-      body,
+    await $fetch("/api/ranking", {
+      method: "post",
+      body: {
+        alias,
+        duration,
+        snakeLength: lastGameScore.value,
+      },
     })
   }
 }
