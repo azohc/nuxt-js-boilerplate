@@ -126,8 +126,9 @@ async function handleGameOver({
   container.value.focus()
   startPlayCooldown()
   const alias = authStore.alias
+
   if (alias && lastGameScore.value) {
-    await $fetch("/api/ranking", {
+    await $fetch("/api/savegame", {
       method: "post",
       body: {
         alias,

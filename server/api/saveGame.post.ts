@@ -2,12 +2,13 @@ export default defineEventHandler(async (event) => {
   const { alias, duration, snakeLength } = await readBody(event)
   const ranking = await $fetch("/api/ranking")
 
-  let newRanking = Object.assign({}, ranking, {
+  let newRanking = {
+    ...ranking,
     [alias]: {
       snakeLength,
       duration,
     },
-  })
+  }
 
   newRanking = Object.fromEntries(
     [...Object.entries(newRanking)].sort((a: any, b: any) => {
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
       }
     })
   )
+
   const response = await $fetch("/api/ranking", {
     method: "post",
     body: {
