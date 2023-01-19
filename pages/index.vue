@@ -5,19 +5,29 @@
     class="h-screen w-screen flex flex-col justify-center items-center"
     @keyup="onKeyUp"
   >
-    <Head> <Title> snake </Title> </Head>
+    <Head> <Title> sneyk </Title> </Head>
     <div
       class="flex flex-col gap-4 items-center"
       v-if="state === 'idle'"
     >
-      <h1 class="text-8xl">snake</h1>
+      <h1 class="text-8xl">sneyk</h1>
       <CardButton :click-callback="startGame"> play </CardButton>
-      <CardButton
+      <div
         v-if="authStore.isAuthenticated"
-        :click-callback="navigateToUser"
-        secondary
-        >{{ authStore.alias }}</CardButton
+        class="flex flex-col gap-4"
       >
+        <CardButton :click-callback="navigateToRankings" secondary>
+          <NuxtLink to="/ranking">ranking</NuxtLink>
+        </CardButton>
+        <span class="flex gap-2 items-baseline">
+          logged in as
+          <span class="text-violet-800 text-3xl">
+            <NuxtLink to="/user">
+              {{ authStore.alias }}
+            </NuxtLink>
+          </span>
+        </span>
+      </div>
       <CardButton v-else :click-callback="navigateToUser" secondary
         >set alias</CardButton
       >
@@ -33,7 +43,7 @@
       class="p-6 text-center flex flex-col items-center gap-3"
     >
       <h2 class="text-5xl">game over</h2>
-      <p>you ate {{ lastGameScore }} apples</p>
+      <p>you ate {{ latestApplesEaten }} apples</p>
 
       <CardButton :click-callback="startGame">
         play again
@@ -50,10 +60,7 @@
 const authStore = useAuthStore()
 type GameState = "idle" | "playing" | "dead"
 const state = ref<GameState>("idle")
-const lastSnakeLength = ref()
-const lastGameScore = computed<number>(
-  () => lastSnakeLength.value - 4
-)
+const latestApplesEaten = ref()
 const container = ref()
 let width: number, height: number
 let coolingDown = true
@@ -114,26 +121,26 @@ function startPlayCooldown() {
 }
 
 async function handleGameOver({
-  snakeLength,
+  applesEaten,
   duration,
 }: {
-  snakeLength: number
+  applesEaten: number
   duration: Date
 }) {
   state.value = "dead"
-  lastSnakeLength.value = snakeLength
+  latestApplesEaten.value = applesEaten
   // store in ranking if above 11 apples TODO
   container.value.focus()
   startPlayCooldown()
   const alias = authStore.alias
 
-  if (alias && lastGameScore.value) {
+  if (alias && applesEaten) {
     await $fetch("/api/savegame", {
       method: "post",
       body: {
         alias,
         duration,
-        snakeLength: lastGameScore.value,
+        applesEaten,
       },
     })
   }

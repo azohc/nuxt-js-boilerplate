@@ -12,7 +12,7 @@
         TODO show less ideas, or at least the ones that make sense
       </p> -->
     <CardButton secondary :click-callback="() => navigateTo('/')"
-      >back to playing snake</CardButton
+      >home</CardButton
     >
     <CardButton secondary :click-callback="handleLogoutClick"
       >log out</CardButton

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --c-green: #16a349;
+  --c-dark-green: #14532d;
+  --c-light-green: rgb(34 197 94);
+  --color-scrollbar: var(--c-dark-green);
+  --color-scrollbar-hover: var(--c-light-green);
+}
+
 @font-face {
   font-family: "SummerPixel";
   font-weight: 400;
@@ -22,4 +30,26 @@ body {
 .page-leave-to {
   opacity: 0;
   filter: blur(1rem);
+}
+
+* {
+  scrollbar-color: var(--color-scrollbar) var(--color-background);
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: var(--c-green);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-hover);
 }

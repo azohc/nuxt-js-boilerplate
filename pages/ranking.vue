@@ -10,7 +10,7 @@
       />
     </Head>
     <h1 class="text-5xl font-bold">global ranking</h1>
-    <div class="flex justify-center gap-4">
+    <div class="flex justify-center gap-4 max-h-72">
       <TailwindTable
         v-if="rankingTableData"
         :head="rankingTableHead"
@@ -19,7 +19,7 @@
       <h1 v-else>loading rankings...</h1>
     </div>
     <CardButton secondary :click-callback="() => navigateTo('/')">
-      <NuxtLink to="/">play again</NuxtLink>
+      <NuxtLink to="/">home</NuxtLink>
     </CardButton>
   </div>
 </template>
@@ -46,7 +46,7 @@ function setRankingTableData() {
     rankingTableData.value = Object.keys(ranking.value).map(
       (alias) => [
         alias,
-        ranking.value[alias].snakeLength,
+        ranking.value[alias].applesEaten,
         Math.floor(ranking.value[alias].duration / 1000) + " s",
       ]
     )

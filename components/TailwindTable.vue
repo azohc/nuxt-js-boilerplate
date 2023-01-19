@@ -1,10 +1,12 @@
 <template>
   <div class="flex flex-col">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="overflow-y-scroll sm:-mx-6 lg:-mx-8">
       <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
         <div class="overflow-hidden">
           <table class="min-w-full">
-            <thead class="bg-green-600 border-b border-green-900">
+            <thead
+              class="bg-green-600 border-b border-green-900 sticky top-0"
+            >
               <tr>
                 <th
                   scope="col"

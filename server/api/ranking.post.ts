@@ -7,5 +7,6 @@ export default defineEventHandler(async (event) => {
     "./server/ranking.json",
     JSON.stringify(body.newRanking)
   )
+  event.node.res.statusCode = 200
   return { ok: true }
 })

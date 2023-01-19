@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "page", mode: "out-in" },
     head: {
-      title: "juan's portfolio",
+      title: "sneyk",
       meta: [
         {
           name: "viewport",
@@ -21,7 +21,8 @@ export default defineNuxtConfig({
         },
         {
           name: "description",
-          content: "read about me and the projects I'm working on",
+          content:
+            "compete at the classic snake game using wasd, hjkl, or the arrow keys. press f/g to increase/decrease the snake's speed",
         },
       ],
     },

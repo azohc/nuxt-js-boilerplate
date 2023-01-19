@@ -239,7 +239,9 @@ function onKeyDown(event) {
   } else if (event.code === "Escape") {
     endGame()
   } else if (["KeyF", "KeyG"].includes(event.code)) {
-    if (TICKRATE >= 30) {
+    if (TICKRATE === 15 && event.code === "KeyG") {
+      TICKRATE += 15
+    } else if (TICKRATE >= 15) {
       TICKRATE = TICKRATE + (event.code === "KeyG" ? 15 : -15)
     }
     const reSetInterval = () => {
@@ -286,7 +288,7 @@ function onKeyDown(event) {
 async function endGame() {
   clearInterval(playInterval)
   emit("gameOver", {
-    snakeLength: snakeState.value.coordinates.length,
+    applesEaten: snakeState.value.coordinates.length - 4,
     duration: new Date() - timeGameStarted,
   })
 }
