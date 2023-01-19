@@ -1,17 +1,12 @@
 <template>
-  <div>
-    <canvas
-      class="cursor-none"
-      ref="canvas"
-      @keydown="onKeyDown"
-      tabindex="1"
-      :height="props.height"
-      :width="props.width"
-    ></canvas>
-    <span class="absolute text-3xl top-0">
-      {{ TICKRATE }}
-    </span>
-  </div>
+  <canvas
+    class="cursor-none"
+    ref="canvas"
+    @keydown="onKeyDown"
+    tabindex="1"
+    :height="props.height"
+    :width="props.width"
+  ></canvas>
 </template>
 
 <script setup>
