@@ -6,6 +6,10 @@
     @keyup="onKeyUp"
   >
     <Head> <Title> sneyk </Title> </Head>
+    <KeysDemo
+      class="absolute bottom-1 right-3 text-xl"
+      v-if="true"
+    ></KeysDemo>
     <div
       class="flex flex-col gap-4 items-center"
       v-if="state === 'idle'"

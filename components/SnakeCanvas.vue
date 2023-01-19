@@ -1,15 +1,22 @@
 <template>
-  <canvas
-    class="cursor-none"
-    ref="canvas"
-    @keydown="onKeyDown"
-    tabindex="1"
-    :height="props.height"
-    :width="props.width"
-  ></canvas>
+  <div>
+    <!-- todo change if true for if enabled in settings -->
+    <span v-if="true" class="absolute top-1 left-3 text-xl">{{
+      snakeState.coordinates.length - 4
+    }}</span>
+    <canvas
+      class="cursor-none"
+      ref="canvas"
+      @keydown="onKeyDown"
+      tabindex="1"
+      :height="props.height"
+      :width="props.width"
+    ></canvas>
+  </div>
 </template>
 
 <script setup>
+const paused = ref(false)
 const emit = defineEmits(["gameOver"])
 const props = defineProps({
   height: {
@@ -342,9 +349,11 @@ const togglepause = () => {
   if (playInterval == null) {
     playInterval = setInterval(onTick, TICKRATE.value)
     ticksTilPlayFades = 8
+    paused.value = false
   } else {
     playInterval = clearInterval(playInterval)
     drawPause()
+    paused.value = true
   }
 }
 </script>
