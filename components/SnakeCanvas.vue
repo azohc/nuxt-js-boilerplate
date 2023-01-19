@@ -1,9 +1,10 @@
 <template>
   <div>
-    <!-- todo change if true for if enabled in settings -->
-    <span v-if="true" class="absolute top-1 left-3 text-xl">{{
-      snakeState.coordinates.length - 4
-    }}</span>
+    <span
+      v-if="prefs.showScore"
+      class="absolute top-1 left-3 text-xl"
+      >{{ snakeState.coordinates.length - 4 }}</span
+    >
     <canvas
       class="cursor-none"
       ref="canvas"
@@ -16,6 +17,11 @@
 </template>
 
 <script setup>
+import { useStorage } from "@vueuse/core"
+const prefs = useStorage("preferences", {
+  showScore: false,
+  showKeyPresses: false,
+})
 const paused = ref(false)
 const emit = defineEmits(["gameOver"])
 const props = defineProps({

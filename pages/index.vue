@@ -6,9 +6,39 @@
     @keyup="onKeyUp"
   >
     <Head> <Title> sneyk </Title> </Head>
+    <div
+      v-if="modalVisible"
+      class="fixed z-10 h-screen w-screen flex flex-col items-center justify-center bg-green-900 bg-opacity-75"
+    >
+      <div
+        ref="modalRef"
+        class="w-9/12 p-2 bg-green-600 border-4 border-green-900"
+      >
+        <p class="text-3xl">parameters</p>
+        <div class="grid grid-cols-2">
+          <span>show score</span>
+          <OnOffSwitch
+            :value="tempShowScorePref"
+            @switched="tempShowScorePref = !tempShowScorePref"
+          />
+          <span>show key press sensor</span>
+          <OnOffSwitch
+            :value="tempShowKeyPressesPref"
+            @switched="
+              tempShowKeyPressesPref = !tempShowKeyPressesPref
+            "
+          />
+        </div>
+        <div class="flex justify-end">
+          <CardButton secondary :click-callback="savePreferences"
+            >save</CardButton
+          >
+        </div>
+      </div>
+    </div>
     <KeysDemo
       class="absolute bottom-1 right-3 text-xl"
-      v-if="true"
+      v-if="prefs.showKeyPresses"
     ></KeysDemo>
     <div
       class="flex flex-col gap-4 items-center"
@@ -37,6 +67,7 @@
       >
     </div>
     <SnakeCanvas
+      ref="canvas"
       v-else-if="state === 'playing'"
       :height="height"
       :width="width"
@@ -61,6 +92,8 @@
 </template>
 
 <script setup lang="ts">
+import { onClickOutside, useStorage } from "@vueuse/core"
+
 const authStore = useAuthStore()
 type GameState = "idle" | "playing" | "dead"
 const state = ref<GameState>("idle")
@@ -68,6 +101,26 @@ const latestApplesEaten = ref()
 const container = ref()
 let width: number, height: number
 let coolingDown = true
+const prefs = useStorage("preferences", {
+  showScore: false,
+  showKeyPresses: false,
+})
+const tempShowScorePref = ref(prefs.value.showScore)
+const tempShowKeyPressesPref = ref(prefs.value.showKeyPresses)
+
+const modalVisible = ref(false)
+const modalRef = ref(null)
+onClickOutside(modalRef, (event) => {
+  modalVisible.value = false
+})
+
+function savePreferences() {
+  prefs.value = {
+    showScore: tempShowScorePref.value,
+    showKeyPresses: tempShowKeyPressesPref.value,
+  }
+  modalVisible.value = false
+}
 
 function navigateToUser() {
   return navigateTo({
@@ -111,7 +164,10 @@ function onKeyUp(event: KeyboardEvent) {
   ) {
     startGame()
   } else if (event.code === "Esc") {
+    modalVisible.value = false
     state.value = "idle"
+  } else if (event.code === "KeyP") {
+    modalVisible.value = true
   }
 }
 
