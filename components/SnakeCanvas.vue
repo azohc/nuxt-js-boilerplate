@@ -1,12 +1,17 @@
 <template>
-  <canvas
-    class="cursor-none"
-    ref="canvas"
-    @keydown="onKeyDown"
-    tabindex="1"
-    :height="props.height"
-    :width="props.width"
-  ></canvas>
+  <div>
+    <canvas
+      class="cursor-none"
+      ref="canvas"
+      @keydown="onKeyDown"
+      tabindex="1"
+      :height="props.height"
+      :width="props.width"
+    ></canvas>
+    <span class="absolute text-3xl top-0">
+      {{ TICKRATE }}
+    </span>
+  </div>
 </template>
 
 <script setup>
@@ -27,7 +32,7 @@ const DIRECTION_LEFT = "LEFT"
 const DIRECTION_RIGHT = "RIGHT"
 const SNAKE_GREEN = "#14532D"
 const BACKGROUND_GREEN = "#16A349"
-let TICKRATE = 60
+const TICKRATE = ref(60)
 
 // the below "PIXEL" is NxN actual atomic pixels
 const PIXEL_SIZE = 5
@@ -94,7 +99,7 @@ onMounted(() => {
   })
   fillBg(BACKGROUND_GREEN)
 
-  playInterval = setInterval(onTick, TICKRATE)
+  playInterval = setInterval(onTick, TICKRATE.value)
   canvas.value.focus()
   timeGameStarted = new Date()
 })
@@ -239,16 +244,20 @@ function onKeyDown(event) {
   } else if (event.code === "Escape") {
     endGame()
   } else if (["KeyF", "KeyG"].includes(event.code)) {
-    if (TICKRATE === 15 && event.code === "KeyG") {
-      TICKRATE += 15
-    } else if (TICKRATE >= 15) {
-      TICKRATE = TICKRATE + (event.code === "KeyG" ? 15 : -15)
+    if (TICKRATE.value === 10 && event.code === "KeyG") {
+      TICKRATE.value += 5
+    } else if (TICKRATE.value >= 15) {
+      TICKRATE.value =
+        TICKRATE.value + (event.code === "KeyG" ? 15 : -15)
+    }
+    if (TICKRATE.value === 0) {
+      TICKRATE.value = 10
     }
     const reSetInterval = () => {
       if (playInterval !== null) {
         playInterval = clearInterval(playInterval)
       }
-      playInterval = setInterval(onTick, TICKRATE)
+      playInterval = setInterval(onTick, TICKRATE.value)
     }
     reSetInterval()
   }
@@ -336,7 +345,7 @@ function drawPlayFade() {
 }
 const togglepause = () => {
   if (playInterval == null) {
-    playInterval = setInterval(onTick, TICKRATE)
+    playInterval = setInterval(onTick, TICKRATE.value)
     ticksTilPlayFades = 8
   } else {
     playInterval = clearInterval(playInterval)
