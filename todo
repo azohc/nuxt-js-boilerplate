@@ -1,6 +1,8 @@
-make responsive & fix fullscreen css problem on mobile
+verify config for tooling (eslint, prettier, husky)
 
-add firebase db
+add firebase db to make rankings usable instead of relying on fs which
+doesnt work on vercel track stats for a given alias and display on
+user
 
 add help dialog maybe on ? keyCode
 
@@ -8,8 +10,6 @@ factor in screen resolution to score maybe as an alternative ranking
 
 useInfiniteScroll for leaderboards
 
-respond to vp resize
-
-'remember me' for alias: save/load to/from localstore
-
-restful api: track stats for a given alias
+'remember me' for alias: save/load to/from localstore: alias should be
+set once and remembered (save/load) from LS from /user u can change
+alias
