@@ -19,8 +19,8 @@
 
 html,
 body {
-  position: fixed;
-  overflow: hidden;
+  /*   position: fixed;
+  overflow: hidden; */
   margin: 0;
 }
 
