@@ -21,6 +21,7 @@ html,
 body {
   /*   position: fixed;
   overflow: hidden; */
+  height: 100%;
   margin: 0;
 }
 

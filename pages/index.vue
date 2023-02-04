@@ -2,7 +2,7 @@
   <div
     ref="container"
     tabindex="2"
-    class="h-screen w-screen flex flex-col justify-center items-center"
+    class="h-full w-screen flex flex-col justify-center items-center"
     @keyup="onKeyUp"
   >
     <Head> <Title> sneyk </Title> </Head>
@@ -37,12 +37,12 @@
       </div>
     </div>
     <KeysDemo
-      class="absolute bottom-1 right-3 text-xl"
       v-if="prefs.showKeyPresses"
+      class="absolute bottom-1 right-3 text-xl"
     ></KeysDemo>
     <div
-      class="flex flex-col gap-4 items-center"
       v-if="state === 'idle'"
+      class="flex flex-col gap-4 items-center"
     >
       <h1 class="text-8xl">sneyk</h1>
       <CardButton :click-callback="startGame"> play </CardButton>
@@ -67,8 +67,8 @@
       >
     </div>
     <SnakeCanvas
-      ref="canvas"
       v-else-if="state === 'playing'"
+      ref="canvas"
       :height="height"
       :width="width"
       @game-over="handleGameOver"
@@ -92,14 +92,19 @@
 </template>
 
 <script setup lang="ts">
-import { onClickOutside, useStorage } from "@vueuse/core"
+import {
+  onClickOutside,
+  useResizeObserver,
+  useStorage,
+} from "@vueuse/core"
 
 const authStore = useAuthStore()
 type GameState = "idle" | "playing" | "dead"
 const state = ref<GameState>("idle")
 const latestApplesEaten = ref()
 const container = ref()
-let width: number, height: number
+const width = ref<number>(NaN)
+const height = ref<number>(NaN)
 let coolingDown = true
 const prefs = useStorage("preferences", {
   showScore: false,
@@ -110,7 +115,7 @@ const tempShowKeyPressesPref = ref(prefs.value.showKeyPresses)
 
 const modalVisible = ref(false)
 const modalRef = ref(null)
-onClickOutside(modalRef, (event) => {
+onClickOutside(modalRef, () => {
   modalVisible.value = false
 })
 
@@ -133,12 +138,18 @@ function navigateToRankings() {
   })
 }
 
-onMounted(() => {
-  width = document.documentElement.clientWidth
-  while (width % 5) width -= 1
-  height = document.documentElement.clientHeight
-  while (height % 5) height -= 1
+function calculateDimensions() {
+  width.value = document.documentElement.clientWidth
+  while (width.value % 5) width.value -= 1
+  height.value = document.documentElement.clientHeight
+  while (height.value % 5) height.value -= 1
   container.value.focus()
+}
+
+useResizeObserver(container, calculateDimensions)
+
+onMounted(() => {
+  calculateDimensions()
 })
 
 function onKeyUp(event: KeyboardEvent) {
