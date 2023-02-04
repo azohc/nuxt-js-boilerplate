@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.6",
+    "hammerjs": "^2.0.8",
     "pinia": "^2.0.29"
   }
 }

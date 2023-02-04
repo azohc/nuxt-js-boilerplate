@@ -6,17 +6,18 @@
       >{{ snakeState.coordinates.length - 4 }}</span
     >
     <canvas
-      class="cursor-none"
       ref="canvas"
-      @keydown="onKeyDown"
+      class="cursor-none"
       tabindex="1"
       :height="props.height"
       :width="props.width"
+      @keydown="onKeyDown"
     ></canvas>
   </div>
 </template>
 
 <script setup>
+import Hammer from "hammerjs"
 import { useStorage } from "@vueuse/core"
 const prefs = useStorage("preferences", {
   showScore: false,
@@ -110,7 +111,29 @@ onMounted(() => {
   playInterval = setInterval(onTick, TICKRATE.value)
   canvas.value.focus()
   timeGameStarted = new Date()
+
+  const hammer = new Hammer(canvas.value)
+  hammer.get("pan").set({ direction: Hammer.DIRECTION_ALL })
+  hammer.on("panleft panright panup pandown tap press", handleGesture)
 })
+
+function handleGesture(event) {
+  switch (event.type) {
+    case "panup":
+      latestKeydown.value = DIRECTION_UP
+      break
+    case "pandown":
+      latestKeydown.value = DIRECTION_DOWN
+      break
+    case "panleft":
+      latestKeydown.value = DIRECTION_LEFT
+      break
+    case "panright":
+      latestKeydown.value = DIRECTION_RIGHT
+      break
+    default:
+  }
+}
 
 function fillBg(color) {
   context.fillStyle = color
@@ -118,7 +141,7 @@ function fillBg(color) {
 }
 
 function drawPixel(x, y, color) {
-  context.fillStyle = color ? color : "#213404"
+  context.fillStyle = color || "#213404"
   context.fillRect(
     x * PIXEL_SIZE,
     y * PIXEL_SIZE,
@@ -302,7 +325,7 @@ function onKeyDown(event) {
   }
 }
 
-async function endGame() {
+function endGame() {
   clearInterval(playInterval)
   emit("gameOver", {
     applesEaten: snakeState.value.coordinates.length - 4,
