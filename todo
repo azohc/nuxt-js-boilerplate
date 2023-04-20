@@ -1,3 +1,6 @@
+use requestAnimationFrame and a variable velocity instead of a
+variable tickrate
+
 verify config for tooling (eslint, prettier, husky)
 
 add firebase db to make rankings usable instead of relying on fs which
